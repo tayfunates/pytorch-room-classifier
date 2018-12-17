@@ -29,12 +29,18 @@ class Room_Classifier(nn.Module):
 
         in_fea = w * h * c
 
-        fc1 = nn.Linear(in_fea, config.no_of_classes)
+        fc1 = nn.Linear(in_fea, in_fea)
         torch.nn.init.xavier_uniform_(fc1.weight)
+        fc2 = nn.Linear(in_fea, config.no_of_classes)
+        torch.nn.init.xavier_uniform_(fc2.weight)
 
         self.classifier = nn.Sequential(
             fc1,
+            nn.Dropout(p=config.drop_prob),
             nn.ReLU(),
+            fc2,
+            nn.Dropout(p=config.drop_prob),
+            nn.ReLU
         )
 
     def create_maxpool2d(self, w, h, c, kernel_size):
