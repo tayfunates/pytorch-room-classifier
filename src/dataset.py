@@ -22,7 +22,7 @@ class RoomImageDataset(Dataset):
             img = self.transform(img)
         return img, label
 
-class Room(object):
+class Rooms(object):
 
     def __init__(self, **kwargs):
         self.config = Config()
