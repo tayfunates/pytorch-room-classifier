@@ -1,5 +1,26 @@
 from config import *
 import os.path as osp
+from PIL import Image
+
+import torch
+from torch.utils.data import Dataset
+
+class RoomImageDataset(Dataset):
+    def __init__(self, dataset, transform=None):
+        self.dataset = dataset
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, index):
+        img_path, label = self.dataset[index]
+
+        self.samples[img_path] = True
+        img = Image.open(img_path).convert('RGB')
+        if self.transform is not None:
+            img = self.transform(img)
+        return img, label
 
 class Room(object):
 

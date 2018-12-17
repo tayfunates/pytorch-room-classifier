@@ -9,4 +9,3 @@ json_content = []
 for img_json in content:
     img_json_content = json.loads(img_json)
     json_content.append(img_json_content)
-

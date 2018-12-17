@@ -8,6 +8,10 @@ class Config(object):
         self.test_only = False
         self.model_path = '' #If test only mode is on, test the performance of this model, otherwise finetune this model
         self.seed = 1
+        self.no_of_classes = 6
+        self.model_input_width = 32
+        self.model_input_height = 32
+        self.model_input_channels = 3
 
         #train parameters
         self.learning_rate = 0.00001
