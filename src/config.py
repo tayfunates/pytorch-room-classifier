@@ -12,16 +12,16 @@ class Config(object):
         self.model_path = "" #If test only mode is on, test the performance of this model, otherwise finetune this model
         self.seed = 1
         self.no_of_classes = 15
-        self.model_input_width = 32
-        self.model_input_height = 32
+        self.model_input_width = 64
+        self.model_input_height = 64
         self.model_input_channels = 3
 
         #train parameters
         self.learning_rate = 0.0005
         self.weight_decay = 5e-04
-        self.no_of_train_batches = 128
+        self.no_of_train_batches = 8
         self.no_of_epochs = 100
-        self.validation_frequency = 10
+        self.validation_frequency = 5
         self.drop_prob = 0.0
         self.augment_data = False
         self.train_print_freq = 25

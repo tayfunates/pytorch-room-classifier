@@ -51,9 +51,9 @@ class Rooms(object):
         self.val_size = len(self.val_set)
 
         print("Room dataset is loaded")
-        print("Train set contains {:5d} images", self.train_size)
-        print("Test set contains {:5d} images", self.test_size)
-        print("Val set contains {:5d} images", self.val_size)
+        print("Train set contains {:5d} images".format(self.train_size))
+        print("Test set contains {:5d} images".format(self.test_size))
+        print("Val set contains {:5d} images".format(self.val_size))
 
     def getActiveLabels(self):
         return ["fastfood_restaurant", "children_room", "bathroom", "closet", "tv_studio", "computerroom", "clothingstore", "gym", "auditorium", "classroom", "bar", "garage", "dining_room", "florist", "bakery"]

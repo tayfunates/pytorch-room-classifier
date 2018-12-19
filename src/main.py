@@ -9,6 +9,10 @@ import time
 import numpy as np
 import datetime
 from train import *
+from test import *
+import os
+import os.path as osp
+import shutil
 
 if __name__ == '__main__':
     config = Config()
@@ -61,6 +65,26 @@ if __name__ == '__main__':
         start_train_time = time.time()
         train(epoch, model, criterion, optimizer, trainLoader, config)
         train_time += round(time.time() - start_train_time)
+
+        if config.validation_frequency > 0 and (epoch + 1) % config.validation_frequency == 0 or (epoch + 1) == config.no_of_epochs:
+            print("==> Test")
+            acc = test(model, valLoader, config)
+            is_current_best = acc.avg >= best_acc
+            if is_current_best:
+                best_acc = acc.avg
+                best_epoch = epoch + 1
+
+            state_dict = model.state_dict()
+
+            state = {'state_dict': state_dict,  'acc': acc, 'epoch': epoch }
+            checkpoint_path = osp.join(config.log_path, 'epoch_' + str(epoch + 1) + '.pth.tar')
+
+            if not osp.exists(config.log_path):
+                os.makedirs(config.log_path)
+
+            torch.save(state, checkpoint_path)
+            if is_current_best:
+                shutil.copy(checkpoint_path, osp.join(osp.dirname(checkpoint_path), 'best_model.pth.tar'))
 
     elapsed = round(time.time() - start_time)
     elapsed = str(datetime.timedelta(seconds=elapsed))
