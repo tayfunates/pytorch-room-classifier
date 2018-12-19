@@ -19,10 +19,10 @@ class Config(object):
         #train parameters
         self.learning_rate = 0.0005
         self.weight_decay = 5e-04
-        self.no_of_train_batches = 8
+        self.no_of_train_batches = 64
         self.no_of_epochs = 100
         self.validation_frequency = 5
-        self.drop_prob = 0.0
+        self.drop_prob = 0.2
         self.augment_data = False
         self.train_print_freq = 25
 
@@ -59,3 +59,6 @@ class Config(object):
         if pretrained:
             transform_array_test.append(T.Normalize(mean=self.pretrained_data_mean, std=self.pretrained_data_std))
         self.testTransform = T.Compose(transform_array_test)
+
+        #model parameters
+        self.feature_size = 1024

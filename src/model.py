@@ -29,9 +29,9 @@ class Room_Classifier(nn.Module):
 
         in_fea = int(w * h * c)
 
-        fc1 = nn.Linear(in_fea, in_fea)
+        fc1 = nn.Linear(in_fea, config.feature_size)
         torch.nn.init.xavier_uniform_(fc1.weight)
-        fc2 = nn.Linear(in_fea, config.no_of_classes)
+        fc2 = nn.Linear(config.feature_size, config.no_of_classes)
         torch.nn.init.xavier_uniform_(fc2.weight)
 
         self.classifier = nn.Sequential(
