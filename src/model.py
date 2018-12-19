@@ -27,7 +27,7 @@ class Room_Classifier(nn.Module):
             maxpool2
         )
 
-        in_fea = w * h * c
+        in_fea = int(w * h * c)
 
         fc1 = nn.Linear(in_fea, in_fea)
         torch.nn.init.xavier_uniform_(fc1.weight)
@@ -38,18 +38,14 @@ class Room_Classifier(nn.Module):
             fc1,
             nn.Dropout(p=config.drop_prob),
             nn.ReLU(),
-            fc2,
-            nn.Dropout(p=config.drop_prob),
-            nn.ReLU
+            fc2
         )
 
     def create_maxpool2d(self, w, h, c, kernel_size):
-            # (W−F+2P) / S + 1
-            offset = -kernel_size
-            ow = w + offset + 1
-            oh = h + offset + 1
+            ow = w / kernel_size
+            oh = h / kernel_size
             oc = c
-            return nn.MaxPool2d(kernel_size, stride=0, padding=1), ow, oh, oc
+            return nn.MaxPool2d(kernel_size), ow, oh, oc
 
     def create_conv2d(self, w, h, c, no_of_filters, kernel_size, stride, padding ):
         #(W−F+2P) / S + 1

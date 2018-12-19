@@ -7,22 +7,24 @@ import torchvision.transforms as T
 class Config(object):
     def __init__(self):
         # Basic Parameters
-        self.data_path = ""
+        self.data_path = "/Users/tates/Workspace/self/hacettepe/room-classifier/data/images"
         self.test_only = False
         self.model_path = "" #If test only mode is on, test the performance of this model, otherwise finetune this model
         self.seed = 1
-        self.no_of_classes = 6
+        self.no_of_classes = 15
         self.model_input_width = 32
         self.model_input_height = 32
         self.model_input_channels = 3
 
         #train parameters
-        self.learning_rate = 0.00001
+        self.learning_rate = 0.0005
+        self.weight_decay = 5e-04
         self.no_of_train_batches = 128
-        self.no_of_epochs = 20
+        self.no_of_epochs = 100
         self.validation_frequency = 10
         self.drop_prob = 0.0
         self.augment_data = False
+        self.train_print_freq = 25
 
         self.pretrained_data_mean = []
         self.pretrained_data_std = []
@@ -33,9 +35,10 @@ class Config(object):
         torch.manual_seed(self.seed)
         os.environ['CUDA_VISIBLE_DEVICES'] = self.devices
         self.run_gpu = torch.cuda.is_available()
+        self.workers  = 0
 
         #log paramaters
-        self.log_path = osp.joint("log", "lr{lr:7.5f}_nb{nb}_dp{dp}_da{da}".format(lr=self.learning_rate, nb=self.no_of_train_batches, dp=self.drop_prob, da=self.augment_data))
+        self.log_path = osp.join("log", "lr{lr:7.5f}_nb{nb}_dp{dp}_da{da}".format(lr=self.learning_rate, nb=self.no_of_train_batches, dp=self.drop_prob, da=self.augment_data))
 
         #train transform parameters
         transform_array_train = []
