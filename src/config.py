@@ -12,8 +12,8 @@ class Config(object):
         self.model_path = "" #If test only mode is on, test the performance of this model, otherwise finetune this model
         self.seed = 1
         self.no_of_classes = 15
-        self.model_input_width = 224
-        self.model_input_height = 224
+        self.model_input_width = 64
+        self.model_input_height = 64
         self.model_input_channels = 3
 
         #train parameters
@@ -22,10 +22,11 @@ class Config(object):
         self.no_of_train_batches = 64
         self.no_of_epochs = 100
         self.validation_frequency = 5
-        self.drop_prob = 0.2
+        self.drop_prob = 0.0
         self.augment_data = False
         self.train_print_freq = 25
-        self.use_resnet = True;
+        self.use_resnet = False
+        self.use_batch_normalization = False
 
         self.pretrained_data_mean = []
         self.pretrained_data_std = []
@@ -41,7 +42,7 @@ class Config(object):
         self.workers  = 0
 
         #log paramaters
-        self.log_path = osp.join("log", "lr{lr:7.5f}_nb{nb}_dp{dp}_da{da}_ur{ur}".format(lr=self.learning_rate, nb=self.no_of_train_batches, dp=self.drop_prob, da=self.augment_data, ur=self.use_resnet))
+        self.log_path = osp.join("log", "lr{lr:7.5f}_nb{nb}_dp{dp}_da{da}_ur{ur}_bn{bn}".format(lr=self.learning_rate, nb=self.no_of_train_batches, dp=self.drop_prob, da=self.augment_data, ur=self.use_resnet, bn=self.use_batch_normalization))
 
         #train transform parameters
         transform_array_train = []
@@ -64,4 +65,4 @@ class Config(object):
         self.testTransform = T.Compose(transform_array_test)
 
         #model parameters
-        self.feature_size = 1024
+        self.feature_size = 512
