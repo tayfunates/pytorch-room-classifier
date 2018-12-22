@@ -5,6 +5,7 @@ from dataset import Rooms
 from dataset import RoomImageDataset
 from torch.utils.data import DataLoader
 from model import Room_Classifier
+from resnet18 import Resnet18_Room_Classifier
 import time
 import numpy as np
 import datetime
@@ -40,8 +41,10 @@ if __name__ == '__main__':
         pin_memory=config.run_gpu, drop_last=False,
     )
 
-    #ToDo: Consider loading already existing model for fine tuning and testing
-    model = Room_Classifier(config)
+    if not config.use_resnet:
+        model = Room_Classifier(config)
+    else:
+        model = Resnet18_Room_Classifier(config)
 
     if config.run_gpu:
         model.cuda()

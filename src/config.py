@@ -12,8 +12,8 @@ class Config(object):
         self.model_path = "" #If test only mode is on, test the performance of this model, otherwise finetune this model
         self.seed = 1
         self.no_of_classes = 15
-        self.model_input_width = 64
-        self.model_input_height = 64
+        self.model_input_width = 224
+        self.model_input_height = 224
         self.model_input_channels = 3
 
         #train parameters
@@ -25,10 +25,13 @@ class Config(object):
         self.drop_prob = 0.2
         self.augment_data = False
         self.train_print_freq = 25
+        self.use_resnet = True;
 
         self.pretrained_data_mean = []
         self.pretrained_data_std = []
-        pretrained = (len(self.pretrained_data_mean) > 0) and (len(self.pretrained_data_std) > 0)
+        if self.use_resnet:
+            self.pretrained_data_mean = [0.485, 0.456, 0.406]
+            self.pretrained_data_std = [0.229, 0.224, 0.225]
 
         #cuda parameters
         self.devices = "0"
@@ -38,7 +41,7 @@ class Config(object):
         self.workers  = 0
 
         #log paramaters
-        self.log_path = osp.join("log", "lr{lr:7.5f}_nb{nb}_dp{dp}_da{da}".format(lr=self.learning_rate, nb=self.no_of_train_batches, dp=self.drop_prob, da=self.augment_data))
+        self.log_path = osp.join("log", "lr{lr:7.5f}_nb{nb}_dp{dp}_da{da}_ur{ur}".format(lr=self.learning_rate, nb=self.no_of_train_batches, dp=self.drop_prob, da=self.augment_data, ur=self.use_resnet))
 
         #train transform parameters
         transform_array_train = []
@@ -48,7 +51,7 @@ class Config(object):
             #To do add other types of augmentation
 
         transform_array_train.append(T.ToTensor())
-        if pretrained:
+        if self.use_resnet:
             transform_array_train.append(T.Normalize(mean=self.pretrained_data_mean, std=self.pretrained_data_std))
         self.trainTransform = T.Compose(transform_array_train)
 
@@ -56,7 +59,7 @@ class Config(object):
         transform_array_test = []
         transform_array_test.append(T.Resize((self.model_input_height, self.model_input_width)))
         transform_array_test.append(T.ToTensor())
-        if pretrained:
+        if self.use_resnet:
             transform_array_test.append(T.Normalize(mean=self.pretrained_data_mean, std=self.pretrained_data_std))
         self.testTransform = T.Compose(transform_array_test)
 
