@@ -8,6 +8,8 @@ class Config(object):
     def __init__(self):
         # Basic Parameters
         self.data_path = "/Users/tates/Workspace/self/hacettepe/room-classifier/data/images"
+        self.train_img_list = "TrainImages.txt"
+        self.test_img_list = "TestImages.txt"
         self.test_only = False
         self.model_path = "" #If test only mode is on, test the performance of this model, otherwise finetune this model
         self.seed = 1

@@ -18,6 +18,8 @@ import shutil
 if __name__ == '__main__':
     config = Config()
 
+    print("GPU Available? ", config.run_gpu)
+
     cudnn.benchmark = True
     torch.cuda.manual_seed_all(config.seed)
 
@@ -62,6 +64,7 @@ if __name__ == '__main__':
     start_time = time.time()
     train_time = 0
     best_acc = -np.inf
+    best_epoch = 0
     print("Started training...")
 
     for epoch in range(start_epoch, config.no_of_epochs):
@@ -93,3 +96,4 @@ if __name__ == '__main__':
     elapsed = str(datetime.timedelta(seconds=elapsed))
     train_time = str(datetime.timedelta(seconds=train_time))
     print("Finished. Total elapsed time (h:m:s): {}. Training time (h:m:s): {}.".format(elapsed, train_time))
+    print("Finished. Best accuracy {} is obtained in epoch {}.".format(best_acc, best_epoch))

@@ -34,8 +34,13 @@ class Rooms(object):
         if not osp.exists(self.config.data_path):
             raise RuntimeError("'{}' does not exist".format(self.config.data_path))
 
-        full_X, full_Y = self.readDataFolder(self.config.data_path)
-        self.train_set, self.train_labels, self.test_set, self.test_labels,  self.val_set, self.val_labels = self.splitDataSet(full_X, full_Y)
+        train_img_list = self.readImageList(self.config.train_img_list)
+        test_img_list = self.readImageList(self.config.test_img_list)
+
+        self.test_set, self.test_labels = self.readDataFolder(self.config.data_path, test_img_list)
+        train_set, train_labels = self.readDataFolder(self.config.data_path, train_img_list)
+
+        self.train_set, self.train_labels,  self.val_set, self.val_labels = self.splitDataSet(train_set, train_labels)
 
         if len(self.train_set) != len(self.train_labels):
             raise RuntimeError("Train set and train labels have different sizes")
@@ -58,8 +63,18 @@ class Rooms(object):
     def getActiveLabels(self):
         return ["fastfood_restaurant", "children_room", "bathroom", "closet", "tv_studio", "computerroom", "clothingstore", "gym", "auditorium", "classroom", "bar", "garage", "dining_room", "florist", "bakery"]
 
+    def readImageList(self, path):
+        label_directories = self.getActiveLabels()
+        ret = []
+        with open(path) as fp:
+            for cnt, line in enumerate(fp):
+                line = line.strip('\n')
+                label = osp.split(line)[0]
+                if label in label_directories:
+                    ret.append(line.strip('\n'))
+        return ret
 
-    def readDataFolder(self, path):
+    def readDataFolder(self, path, filter_list):
         label_directories = self.getActiveLabels()
 
         x_list = []
@@ -68,18 +83,19 @@ class Rooms(object):
             label_str = label_directories[label]
             #We use only a subset of all labels
 
-
             label_directory = osp.join(path, label_str)
             label_image_paths = glob.glob(osp.join(label_directory, '*.jpg'))
             for label_image_path in label_image_paths:
+                filter_name = osp.join(label_str, osp.split(label_image_path)[1])
+                if not filter_name in filter_list:
+                    continue
+
                 img = Image.open(label_image_path).convert('RGB')
                 x_list.append(img)
                 y_list.append(label)
         return x_list, y_list
 
-    def splitDataSet(self, full_X, full_Y):
+    def splitDataSet(self, X, Y):
         #Use stratify to balance labels
-        X_train, X_test, Y_train, Y_test = train_test_split(full_X, full_Y, test_size = 0.2, random_state = 42, stratify=full_Y)
-        X_train, X_val, Y_train, Y_val = train_test_split(X_train, Y_train, test_size = 0.2, random_state = 42, stratify=Y_train)
-
-        return X_train, Y_train, X_test, Y_test, X_val, Y_val
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, random_state = 42, stratify=Y)
+        return X_train, Y_train, X_test, Y_test
