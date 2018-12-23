@@ -14,21 +14,21 @@ class Config(object):
         self.model_path = "" #If test only mode is on, test the performance of this model, otherwise finetune this model
         self.seed = 1
         self.no_of_classes = 15
-        self.model_input_width = 64
-        self.model_input_height = 64
+        self.model_input_width = 224
+        self.model_input_height = 224
         self.model_input_channels = 3
 
         #train parameters
-        self.learning_rate = 0.0005
+        self.learning_rate = 0.00025
         self.weight_decay = 5e-04
-        self.no_of_train_batches = 64
-        self.no_of_epochs = 100
+        self.no_of_train_batches = 32
+        self.no_of_epochs = 200
         self.validation_frequency = 5
-        self.drop_prob = 0.0
-        self.augment_data = False
+        self.drop_prob = 0.25
+        self.augment_data = True
         self.train_print_freq = 25
         self.use_resnet = False
-        self.use_batch_normalization = False
+        self.use_batch_normalization = True
 
         self.pretrained_data_mean = []
         self.pretrained_data_std = []
@@ -50,6 +50,9 @@ class Config(object):
         transform_array_train = []
         transform_array_train.append(T.Resize((self.model_input_height, self.model_input_width)))
         if self.augment_data:
+            self.model_input_width = 128
+            self.model_input_height = 128
+            transform_array_train.append(T.RandomResizedCrop(128))
             transform_array_train.append(T.RandomHorizontalFlip())
             #To do add other types of augmentation
 
