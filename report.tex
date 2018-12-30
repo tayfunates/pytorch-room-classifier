@@ -20,6 +20,7 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{enumitem}
+\usepackage{graphicx}
 
 \title{CMP 719 - Computer Vision Assignment 1}
 
@@ -52,7 +53,7 @@ of CMP719 course of the Department of Computer Engineering in Hacettepe Universi
 
 \section{Introduction}
 
- The deliverables of this homework is provided as a solution of a room classification problem with 15 classes. The classes tried to be learnt are fastfood restaurant, children room, bathroom, closet, tv studio, computer room, clothingstore, gym, auditorium, classroom, bar, garage, dining room, florist, bakery. Report contains three sections which are preparing data, training a classifier from scratch and transfer learning in convolutional neural networks. For the first two sections, a basic deep learning model, whose details are given in section 2, is selected. Experiments conducted on top of this model and the model is updated if experiments result in an accuracy increase on the validation set incrementally. For the last section, instead of using a model created from scratch, we use Resnet18 model \cite{he2016deep} pre-trained with ImageNet dataset  \cite{russakovsky2015imagenet}. By the help of a famous model, we investigate effects of transfer learning. 
+ The deliverables of this homework is provided as a solution of a room classification problem with 15 classes. The classes tried to be learnt are fastfood restaurant, children room, bathroom, closet, tv studio, computer room, clothingstore, gym, auditorium, classroom, bar, garage, dining room, florist, bakery. Report contains three sections which are preparing data, training a classifier from scratch and transfer learning in convolutional neural networks. For the first two sections, a basic deep learning model, whose details are given in section 2, is selected. Experiments are conducted on top of this model and the model is updated if experiments result in an accuracy increase on the validation set incrementally. For the last section, instead of using a model created from scratch, we use Resnet18 model \cite{he2016deep} pre-trained with ImageNet dataset  \cite{russakovsky2015imagenet}. By the help of a famous model, we investigate effects of transfer learning. 
  
  During all experiments and tuning process, only validation test is used to update the best model. After reaching the best model for the validation set, accuracy result is given using test set. Using any data from test set during tuning parameters is considered as cheating and we also avoid doing that.
 
@@ -91,9 +92,26 @@ As you can see, we use two fully connected layers from which the first one used 
 
 As also can be seen, ReLU layers are used as activation functions. There are several advantages of using ReLUs as activation functions. One reason is that ReLU is very robust against gradient vanishig problem. However, this has less importance since our base network is not deep a lot. Other and more important reason for using ReLU is that it provides constant gradient value resulting faster training when compared for example to sigmoid. Since this is a homework and it is required to see the results quickly, it is a natural choice using ReLU activations.
 
-All of the models are trained with Adam optimizer with a learning rate and weight decay of 0.00025 and 0.0005, respectively. We use Adam because of its convergence speed and robustness to different values of hyperparameters. Learning rate is tuned by observing loss values among different batches for our dataset using both our model and Resnet18.
-
 A natural choice when dealing with multi-class classification problem is to use cross entropy loss after a softmax activation. We also use this loss function.
+
+All of the models are trained with Adam optimizer. We use Adam because of its convergence speed and robustness to different values of hyperparameters. Learning rate is tuned by observing loss values among different batches for our dataset using both our model and Resnet18. For the experiments deciding whether data augmentation is helpful or not, we use a learning rate of 0.00025 and a weight decay of 0.0005. However, when experimenting batch normalization and dropout, learning rete is updated in order to achieve faster convergence.
+
+First experiment that we have conducted on top of our base model with data augmentation is to check whether using batch normalization layers after each convolution layer increases our validation accuracy or not. Batch normalization is a technique providing tensors to next layers with zero mean and unit variance. Since batch normalization layers add some noise into the network, they can be seen in a way as regulizers. We have trained our model 150 epoch with a learning rate of 0.00025 and obtained a validation accuracy of 0.53 in the latest epochs. Besides showing that batch normalization layers can increase the validation accuracy of our model, this experiment showed that we need to train more with higher number of epochs and/or learning rate in order not to underfit our model.
+
+The next and the last experiment that we have conducted on top our model with batch normalization layers is to check if using dropout in the first fully connected layer to drop some features increases our validation accuracy or not. We have experimented with a dropout probability of 0.25. We have first increased number of epochs to 1000 by fixing the learning rate to 0.00025 and obtained  a best validation accuracy of 0.60. Although this experiment tooks a little bit long, further experiments on learning rate and the number of epochs have reached similar best validation accuracy at maximum. Furthermore, increasing learning rate much has resulted in instable traning where validation scores drop significantly.
+
+We have observed that data augmentation, batch normalization and dropout, all together, increase our best validation accuracy score from 0.35 to 0.60. You can find in Figure \ref{fig:myTrainingProcess} our best model's training behaviour for both training loss and validation accuracy using a batch size of 32, learning rate of 0.00025 and total number of epochs 1000. Loss is calculated for a batch and averaged for an epoch, validation accuracy is calculated after 5 epochs. This is why loss plot is more dense compared to validation accuracy plot. We plotted validation accuracy instead of validation loss without losing any important information. Accuracy and loss of validation have inverse relationship. After 1000 epoch of training, both training loss and validation accuracy start to converge. To avoid overfitting, we apply early stopping by saving model outputs of the each epoch for which validation testing runs. As can be seen from blue plot, we obtained our best model from the output of 845. epoch where the validation accuracy is the highest.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{myTrainingProcess.png}
+  \caption{Training loss and validation accuracy for epochs}
+  \label{fig:myTrainingProcess}
+\end{figure}
+
+TODO
+Test best model on best model
+
+In conclusion, we have investigated creating and training a model for a room classification problem from scratch. This model could also be improved with more data augmentation and exploring dropout not only with a probability of 0.25 but also with higher values. The performance of this model could also be improved by introducing much data. Moreover, as can also be seen in the next section, this model first could be trained on a larger dataset (possibly ImageNet) for a different problem and then finetuned for room classification problem. This transfer learning process could also improve the performance of our naive model.
 
 \section{Transfer Learning in Convolutional Neural Networks}
 
