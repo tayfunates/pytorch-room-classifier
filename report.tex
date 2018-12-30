@@ -122,8 +122,19 @@ In conclusion, we have investigated creating and training a model for a room cla
 
 \section{Transfer Learning in Convolutional Neural Networks}
 
-Details about finetuning go here 
+In this section, we will investigate the benefits of transfer learning in the case of Resnet18 model trained on ImageNet dataset for a different classification task. As we will see soon, one of the advatages of finetuning a pre-trained model is to obtain desired performance in a short amount of time. If we can choose a model for a good image representation, we can avoid feature extractions for different layers and can only focus on feature selection for our specific task to save large amount of time. We also do not deal much with the problems like gradient vanish as in training from scratch by depending on pre-training to extract low level features. After stating that transfer learning has several advantages, using ImageNet for pre-training has also several advantages. The dataset contains 1.2 million images with 1000 categories from which each specific task can find distributions similar to its own data. ImageNet proved itself for different supervised and unsupervised tasks for image representations.
 
+We have implemented our finetuning operation in resnet18.py script. Resnet18 has a more deep architecture than we present in section 3. It contains average pooling as well as maximum pooling. For each convolutional layer, it contains a batch normalization layer but not a ReLU layer. It only contains a ReLU layer after the first convolutional and batch normalization layers pair.
+
+We remove the last fully connected layer from a feature size of 512 to number of classes 1000 and add our own fully connected layer from a feature size of 512 to number of classes 15. We have downloaded and cached pre-trained weights. For finetuning operation, we use an extra transformation for normalizing our data as stated in section 1. We only use a single data augmentation technique which is random horizontal flip. We do not freeze any of the Resnet18 model so that gradient flows to the first layer.
+
+We use the same optimization method and loss function as with section 3. We use a learning rate of 0.00025 and trained our model for 100 epochs. Since we are using early stopping through saving best model during training, the number of epochs only affects the training time. We again use a batch size of 32. You can find in Figure \ref{fig:resnet18TrainingProcess} training process of our transfer learning method. After first few epoch, loss reduce to 0 immediately. However, no sign of overfitting is observed until the epoch 40, where validation accuracy starts to drop. Thanks to early stopping, we can save our best model in epoch 35 where the validation accuracy is 0.89 and test it using our test set. You can see the power of transfer learning (using a deeper architecture and trained on a larger dataset) even from the first epochs of training.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{resnet18TrainingProcess.png}
+  \caption{Training loss and validation accuracy for epochs in Resnet18}
+  \label{fig:resnet18TrainingProcess}
+\end{figure}
 
 \section{Conclusions}
  
