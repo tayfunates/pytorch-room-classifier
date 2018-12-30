@@ -11,12 +11,13 @@ class Config(object):
         self.train_img_list = "TrainImages.txt"
         self.test_img_list = "TestImages.txt"
         self.test_only = False
-        self.model_path = "" #If test only mode is on, test the performance of this model, otherwise finetune this model
+        self.model_path = "my_best_model.pth.tar" #If test only mode is on, test the performance of this model, otherwise finetune this model
         self.seed = 1
         self.no_of_classes = 15
         self.model_input_width = 224
         self.model_input_height = 224
         self.model_input_channels = 3
+        self.draw_confusion_matrix = False
 
         #train parameters
         self.learning_rate = 0.00025

@@ -1,4 +1,5 @@
 import torch
+import sys
 import torch.backends.cudnn as cudnn
 from config import *
 from dataset import Rooms
@@ -56,9 +57,13 @@ if __name__ == '__main__':
 
     if config.test_only:
         if config.model_path != "":
-            checkpoint = torch.load(config.model_path)
+            if config.run_gpu:
+                checkpoint = torch.load(config.model_path)
+            else:
+                checkpoint = torch.load(config.model_path, map_location='cpu')
             model.load_state_dict(checkpoint['state_dict'])
-            #ToDO: Run test code
+            acc = test(model, testLoader, config)
+            sys.exit()
 
     start_epoch = 0
     start_time = time.time()
