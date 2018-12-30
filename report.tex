@@ -108,8 +108,15 @@ We have observed that data augmentation, batch normalization and dropout, all to
   \label{fig:myTrainingProcess}
 \end{figure}
 
-TODO
-Test best model on best model
+So far, all experiments conducted on validation set. Once we obtained our best model, it is now time for us to evaluate the performance of our model on real test set. As stated in section 2, there are 271 test images with 15 different categories for final evaluation. For all these images, our best model has an accuracy of 0.60 on test set where accuracy is defined as the ratio of correctly identified samples to the total number of samples as in previously stated. By having nearly the same results on both validation and test sets, we can state that our validation set is a good representative for our test test set (For the sake of simplicity we ignored too much precision. To be more clear, our best validation accuracy is 0.60162601626 and our test accuracy is 0.6014760147601476).
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{myConfusionMatrix.png}
+  \caption{Confusion matrix of our best model on test set}
+  \label{fig:myConfusionMatrix}
+\end{figure}
+
+In Figure \ref{fig:myConfusionMatrix}, you can see the performance of our best model for different class labels. As can be seen from the figure, our model is mostly successful identifying the class labels of auditorium and florist where it can learn chair and flower textures easily. Our model had difficulty in identifying the class label of computerroom by mostly predicting them as classrooms. Both classes actually have similar structures except for the fact the computerroom images contain computers in it.
 
 In conclusion, we have investigated creating and training a model for a room classification problem from scratch. This model could also be improved with more data augmentation and exploring dropout not only with a probability of 0.25 but also with higher values. The performance of this model could also be improved by introducing much data. Moreover, as can also be seen in the next section, this model first could be trained on a larger dataset (possibly ImageNet) for a different problem and then finetuned for room classification problem. This transfer learning process could also improve the performance of our naive model.
 
