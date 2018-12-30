@@ -12,6 +12,7 @@ Includes networks used for room classification developed for a homework in the D
 ./src/resnet18.py contains resnet18 implementation of the classifier. For the first run, model downloads and caches parameter values which are trained on Imagenet dataset.
 ./src/train.py contains train function of the models for an epoch.
 ./src/test.py contains test function for a pass of the data provided.
+./src/plot_train.py draws some plots on top of training process text files
 
 During execution, software creates a folder ./src/log and saves useful information such as checkpoints of the models. Training and testing process can be watched from command line.
 
